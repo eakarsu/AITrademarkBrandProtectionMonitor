@@ -22,6 +22,29 @@ const aiTools = [
   { id: 'social', icon: '\uD83D\uDCAC', title: 'Social Threat Analysis', desc: 'Analyze social media threats', endpoint: '/social-mentions/analyze', fields: [{ key: 'brandName', label: 'Brand', placeholder: 'Brand name...' }, { key: 'platform', label: 'Platform', type: 'select', options: ['Twitter/X', 'Facebook', 'Instagram', 'TikTok', 'Reddit', 'YouTube'] }, { key: 'content', label: 'Content', type: 'textarea', placeholder: 'Paste content to analyze...' }] },
   { id: 'marketplace', icon: '\uD83D\uDED2', title: 'Marketplace Analyzer', desc: 'Analyze marketplace listings', endpoint: '/marketplace/analyze', fields: [{ key: 'productTitle', label: 'Product', placeholder: 'Product title...' }, { key: 'seller', label: 'Seller', placeholder: 'Seller name...' }, { key: 'marketplace', label: 'Marketplace', type: 'select', options: ['Amazon', 'eBay', 'AliExpress', 'Alibaba', 'Wish'] }] },
   { id: 'audit', icon: '\uD83D\uDCCB', title: 'Audit Analyzer', desc: 'Analyze audit trail patterns', endpoint: '/audit-logs/analyze', fields: [{ key: 'period', label: 'Period', type: 'select', options: ['Last 24 hours', 'Last 7 days', 'Last 30 days', 'All time'] }, { key: 'focusArea', label: 'Focus', type: 'select', options: ['Security', 'Compliance', 'User Behavior', 'Anomalies'] }] },
+  { id: 'cnd-attorney', icon: '⚖️', title: 'Attorney C&D Letter', desc: 'Draft a full attorney-quality cease & desist letter with legal arguments', endpoint: '/ai/cease-and-desist', fields: [
+    { key: 'sender_company', label: 'Sender Company', placeholder: 'e.g., Acme Brands LLC' },
+    { key: 'infringer_name', label: 'Infringer Name', placeholder: 'e.g., Counterfeit Corp' },
+    { key: 'infringer_url', label: 'Infringer URL', placeholder: 'https://...' },
+    { key: 'infringement_type', label: 'Infringement Type', type: 'select', options: ['unauthorized_use', 'counterfeiting', 'domain_squatting', 'brand_impersonation', 'copyright_violation'] },
+    { key: 'jurisdiction', label: 'Jurisdiction', placeholder: 'e.g., United States, California' },
+    { key: 'severity', label: 'Severity', type: 'select', options: ['low', 'medium', 'high', 'critical'] },
+  ] },
+  { id: 'dilution-score', icon: '📉', title: 'Brand Dilution Score', desc: 'Score brand dilution risk (blurring & tarnishment)', endpoint: '/ai/dilution-score', fields: [
+    { key: 'trademark_id', label: 'Trademark ID (optional)', type: 'number', placeholder: 'e.g., 12' },
+    { key: 'similar_marks', label: 'Similar Marks (comma-separated)', placeholder: 'e.g., MarkA, MarkB, MarkC' },
+  ] },
+  { id: 'franchise-compliance', icon: '🏪', title: 'Franchise Compliance Scoring', desc: 'Score brand-standards compliance across franchise locations', endpoint: '/ai/franchise-compliance', fields: [
+    { key: 'brand_name', label: 'Brand Name', placeholder: 'e.g., NovaTech Cafe' },
+    { key: 'locations', label: 'Locations (JSON array)', type: 'textarea', placeholder: '[{"location_id":"L1","city":"Austin","last_audit_score":78,"observations":["signage faded","menu out of date"]}]' },
+    { key: 'brand_standards', label: 'Brand Standards (optional, text)', type: 'textarea', placeholder: 'e.g., signage colors, uniform requirements, customer-experience standards' },
+  ] },
+  { id: 'market-expansion', icon: '🌍', title: 'Market Expansion Scouting', desc: 'Recommend top markets for brand expansion (incl. trademark risk)', endpoint: '/ai/market-expansion', fields: [
+    { key: 'brand_name', label: 'Brand Name', placeholder: 'e.g., LuxeVault' },
+    { key: 'current_markets', label: 'Current Markets (comma-separated)', placeholder: 'US, Canada, UK' },
+    { key: 'candidate_markets', label: 'Candidate Markets (comma-separated, optional)', placeholder: 'Germany, Japan, Brazil' },
+    { key: 'expansion_criteria', label: 'Expansion Criteria (optional, text)', type: 'textarea', placeholder: 'e.g., demographic fit, regulatory ease, trademark availability' },
+  ] },
 ]
 
 const sampleData = {
@@ -119,6 +142,14 @@ const sampleData = {
     { label: 'Security 24h', period: 'Last 24 hours', focusArea: 'Security' },
     { label: 'Anomalies 7d', period: 'Last 7 days', focusArea: 'Anomalies' },
     { label: 'Compliance 30d', period: 'Last 30 days', focusArea: 'Compliance' },
+  ],
+  'franchise-compliance': [
+    { label: 'NovaTech Cafe (3 locs)', brand_name: 'NovaTech Cafe', locations: '[{"location_id":"L1","city":"Austin","last_audit_score":78,"observations":["signage faded","menu out of date"]},{"location_id":"L2","city":"Denver","last_audit_score":92,"observations":["clean","compliant"]},{"location_id":"L3","city":"Miami","last_audit_score":64,"observations":["uniform violations","unauthorized promotions"]}]', brand_standards: 'Standard signage colors (blue/white), required uniforms, official menu only, customer-experience standards' },
+    { label: 'AquaPure Stores', brand_name: 'AquaPure Retail', locations: '[{"location_id":"AP1","city":"Seattle","last_audit_score":85,"observations":["compliant"]},{"location_id":"AP2","city":"Portland","last_audit_score":71,"observations":["off-brand promotions","outdated logo"]}]', brand_standards: 'Approved logo only, no off-brand merchandise, brand-color signage' },
+  ],
+  'market-expansion': [
+    { label: 'LuxeVault → EU/Asia', brand_name: 'LuxeVault', current_markets: 'US, Canada', candidate_markets: 'Germany, Japan, UK, Singapore', expansion_criteria: 'demographic fit, trademark availability, luxury market depth' },
+    { label: 'NovaTech → LatAm', brand_name: 'NovaTech', current_markets: 'US, UK, Australia', candidate_markets: 'Mexico, Brazil, Chile', expansion_criteria: 'tech adoption rate, regulatory ease, trademark conflicts' },
   ],
 }
 

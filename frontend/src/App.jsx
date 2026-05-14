@@ -20,6 +20,25 @@ import ReportGeneration from './pages/ReportGeneration'
 import AlertManagement from './pages/AlertManagement'
 import AuditTrail from './pages/AuditTrail'
 import AIHub from './pages/AIHub'
+import LogoAnalyzer from './pages/LogoAnalyzer'
+import DomainWatcher from './pages/DomainWatcher'
+import BrandHealthReport from './pages/BrandHealthReport'
+// === Batch 08 Gaps & Frontend Mounts ===
+import CfVisualCounterfeitDetectionFromProductPhotos from './pages/CfVisualCounterfeitDetectionFromProductPhotos'
+import CfAutomatedCDLetterDraftingWithJurisdictional from './pages/CfAutomatedCDLetterDraftingWithJurisdictional'
+import CfFranchiseBrandProtectionMonitoringFranchiseeCompliance from './pages/CfFranchiseBrandProtectionMonitoringFranchiseeCompliance'
+import CfMarketExpansionScoutingIdentifyingInfringementsInNew from './pages/CfMarketExpansionScoutingIdentifyingInfringementsInNew'
+import CfBrandDilutionScoringAcrossCategories from './pages/CfBrandDilutionScoringAcrossCategories'
+import CfUsptoWipoLiveFeedIntegrationWithAuto from './pages/CfUsptoWipoLiveFeedIntegrationWithAuto'
+import GapNoAiForCounterfeitImageAnalysisComputer from './pages/GapNoAiForCounterfeitImageAnalysisComputer'
+import GapNoAiForAutomatedCeaseAndDesist from './pages/GapNoAiForAutomatedCeaseAndDesist'
+import GapNoPredictiveEnforcementOutcomeModel from './pages/GapNoPredictiveEnforcementOutcomeModel'
+import GapNoDirectIntegrationWithUsptoWipoDatabases from './pages/GapNoDirectIntegrationWithUsptoWipoDatabases'
+import GapNoIntegrationWithLawFirmsForEnforcement from './pages/GapNoIntegrationWithLawFirmsForEnforcement'
+import GapNoMultiLanguageSupport from './pages/GapNoMultiLanguageSupport'
+import GapNoGeographicJurisdictionFiltering from './pages/GapNoGeographicJurisdictionFiltering'
+import GapNoWebhooksForRealTimeAlertDelivery from './pages/GapNoWebhooksForRealTimeAlertDelivery'
+import GapNoNotificationsRoutingBeyondAlertsJs from './pages/GapNoNotificationsRoutingBeyondAlertsJs'
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) return <Navigate to="/login" replace />
@@ -47,6 +66,25 @@ export default function App() {
       <Route path="/alerts" element={<ProtectedRoute><AlertManagement /></ProtectedRoute>} />
       <Route path="/audit" element={<ProtectedRoute><AuditTrail /></ProtectedRoute>} />
       <Route path="/ai-hub" element={<ProtectedRoute><AIHub /></ProtectedRoute>} />
+      <Route path="/logo-analyzer" element={<ProtectedRoute><LogoAnalyzer /></ProtectedRoute>} />
+      <Route path="/domain-watcher" element={<ProtectedRoute><DomainWatcher /></ProtectedRoute>} />
+      <Route path="/brand-health" element={<ProtectedRoute><BrandHealthReport /></ProtectedRoute>} />
+      {/* // === Batch 08 Gaps & Frontend Mounts === */}
+      <Route path="/cf-visual-counterfeit-detection-from-product-photos" element={<ProtectedRoute><CfVisualCounterfeitDetectionFromProductPhotos /></ProtectedRoute>} />
+      <Route path="/cf-automated-c-d-letter-drafting-with-jurisdictional-legal" element={<ProtectedRoute><CfAutomatedCDLetterDraftingWithJurisdictional /></ProtectedRoute>} />
+      <Route path="/cf-franchise-brand-protection-monitoring-franchisee-compliance" element={<ProtectedRoute><CfFranchiseBrandProtectionMonitoringFranchiseeCompliance /></ProtectedRoute>} />
+      <Route path="/cf-market-expansion-scouting-identifying-infringements-in-new-geographies" element={<ProtectedRoute><CfMarketExpansionScoutingIdentifyingInfringementsInNew /></ProtectedRoute>} />
+      <Route path="/cf-brand-dilution-scoring-across-categories" element={<ProtectedRoute><CfBrandDilutionScoringAcrossCategories /></ProtectedRoute>} />
+      <Route path="/cf-uspto-wipo-live-feed-integration-with-auto-renewal-tracking" element={<ProtectedRoute><CfUsptoWipoLiveFeedIntegrationWithAuto /></ProtectedRoute>} />
+      <Route path="/gap-no-ai-for-counterfeit-image-analysis-computer-vision" element={<ProtectedRoute><GapNoAiForCounterfeitImageAnalysisComputer /></ProtectedRoute>} />
+      <Route path="/gap-no-ai-for-automated-cease-and-desist-drafting-beyond-stub" element={<ProtectedRoute><GapNoAiForAutomatedCeaseAndDesist /></ProtectedRoute>} />
+      <Route path="/gap-no-predictive-enforcement-outcome-model" element={<ProtectedRoute><GapNoPredictiveEnforcementOutcomeModel /></ProtectedRoute>} />
+      <Route path="/gap-no-direct-integration-with-uspto-wipo-databases-only" element={<ProtectedRoute><GapNoDirectIntegrationWithUsptoWipoDatabases /></ProtectedRoute>} />
+      <Route path="/gap-no-integration-with-law-firms-for-enforcement-workflow" element={<ProtectedRoute><GapNoIntegrationWithLawFirmsForEnforcement /></ProtectedRoute>} />
+      <Route path="/gap-no-multi-language-support" element={<ProtectedRoute><GapNoMultiLanguageSupport /></ProtectedRoute>} />
+      <Route path="/gap-no-geographic-jurisdiction-filtering" element={<ProtectedRoute><GapNoGeographicJurisdictionFiltering /></ProtectedRoute>} />
+      <Route path="/gap-no-webhooks-for-real-time-alert-delivery" element={<ProtectedRoute><GapNoWebhooksForRealTimeAlertDelivery /></ProtectedRoute>} />
+      <Route path="/gap-no-notifications-routing-beyond-alerts-js" element={<ProtectedRoute><GapNoNotificationsRoutingBeyondAlertsJs /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

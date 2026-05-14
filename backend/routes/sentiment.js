@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { callOpenRouter } = require('../services/openrouter');
+const { callOpenRouter, parseAIJson } = require('../services/openrouter');
 
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM sentiment_analyses ORDER BY analyzed_at DESC');
-    res.json(result.rows);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+    const total = await pool.query('SELECT COUNT(*) FROM sentiment_analyses');
+    const result = await pool.query('SELECT * FROM sentiment_analyses ORDER BY analyzed_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
+    res.json({
+      data: result.rows,
+      pagination: { page, limit, total: parseInt(total.rows[0].count), pages: Math.ceil(total.rows[0].count / limit) }
+    });
   } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
 });
 
@@ -51,21 +58,27 @@ router.delete('/:id', async (req, res) => {
   } catch (error) { res.status(500).json({ error: 'Internal server error' }); }
 });
 
+// POST /analyze - FIXED: No more Math.random(), parse actual AI scores
 router.post('/analyze', async (req, res) => {
   try {
     const { brandName, source, period } = req.body;
-    const prompt = `Perform a comprehensive brand sentiment analysis:\n\nBrand: "${brandName}"\nSource: ${source || 'All platforms'}\nPeriod: ${period || 'Last 30 days'}\n\nProvide:\n1. Overall Sentiment Score breakdown (positive %, negative %, neutral %)\n2. Key Positive Themes\n3. Key Negative Themes\n4. Brand Perception Summary\n5. Sentiment Trend Analysis\n6. Competitor Sentiment Comparison\n7. Recommendations for Brand Improvement`;
-    const systemPrompt = 'You are a brand analytics expert specializing in sentiment analysis and brand reputation management. Provide data-driven insights with specific percentages and actionable recommendations.';
-    const aiAnalysis = await callOpenRouter(prompt, systemPrompt);
-    const positiveScore = Math.floor(Math.random() * 30) + 40;
-    const negativeScore = Math.floor(Math.random() * 20) + 5;
-    const neutralScore = 100 - positiveScore - negativeScore;
+    const prompt = `Perform a comprehensive brand sentiment analysis:\n\nBrand: "${brandName}"\nSource: ${source || 'All platforms'}\nPeriod: ${period || 'Last 30 days'}\n\nReturn ONLY valid JSON with this exact structure:\n{"sentiment_score": 0.75, "positive_pct": 65, "negative_pct": 15, "neutral_pct": 20, "key_themes": ["string","string"], "brand_risk": "low|medium|high", "summary": "string"}`;
+    const systemPrompt = 'You are a brand analytics expert specializing in sentiment analysis. Return ONLY valid JSON with numeric scores based on analysis, not random values.';
+
+    const raw = await callOpenRouter(prompt, systemPrompt);
+    const parsed = parseAIJson(raw);
+
+    // Use AI-parsed scores (no Math.random())
+    const positiveScore = parsed?.positive_pct || parsed?.sentiment_score * 100 || 50;
+    const negativeScore = parsed?.negative_pct || 20;
+    const neutralScore = parsed?.neutral_pct || (100 - positiveScore - negativeScore);
+
     const result = await pool.query(
       `INSERT INTO sentiment_analyses (brand_name, source, period, positive_score, negative_score, neutral_score, ai_analysis)
        VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-      [brandName, source || 'All platforms', period || 'Last 30 days', positiveScore, negativeScore, neutralScore, aiAnalysis]
+      [brandName, source || 'All platforms', period || 'Last 30 days', positiveScore, negativeScore, neutralScore, raw]
     );
-    res.json({ ...result.rows[0], ai_analysis: aiAnalysis });
+    res.json({ ...result.rows[0], parsed, ai_analysis: raw });
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 

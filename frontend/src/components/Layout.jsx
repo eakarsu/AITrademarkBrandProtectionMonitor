@@ -34,6 +34,9 @@ const navGroups = [
       { to: '/trademark-search', icon: '\uD83D\uDD0D', label: 'Trademark Search' },
       { to: '/sentiment', icon: '\uD83D\uDCCA', label: 'Sentiment Analysis' },
       { to: '/competitors', icon: '\uD83C\uDFC6', label: 'Competitor Analysis' },
+      { to: '/logo-analyzer', icon: '\uD83D\uDCF8', label: 'Logo Analyzer' },
+      { to: '/domain-watcher', icon: '\uD83D\uDD76', label: 'Domain Watcher' },
+      { to: '/brand-health', icon: '\uD83D\uDCC8', label: 'Brand Health' },
     ]
   },
   {

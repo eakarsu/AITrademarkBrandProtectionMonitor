@@ -3,12 +3,17 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// Security
+app.use(helmet());
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -18,8 +23,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
+// Public routes
 app.use('/api/auth', require('./routes/auth'));
+
+// Audit middleware for mutations
+const { authenticateToken } = require('./middleware/auth');
+const auditMiddleware = require('./middleware/audit');
+
+// Protect all /api routes except /api/auth
+app.use('/api', (req, res, next) => {
+  if (req.path.startsWith('/auth')) return next();
+  authenticateToken(req, res, next);
+});
+
+// Audit log on mutations
+app.use('/api', auditMiddleware);
+
+// Protected routes
 app.use('/api/trademarks', require('./routes/trademarks'));
 app.use('/api/infringements', require('./routes/infringements'));
 app.use('/api/domains', require('./routes/domains'));
@@ -54,6 +74,19 @@ app.use((err, req, res, next) => {
     error: err.message || 'Internal server error'
   });
 });
+
+app.use('/api/visual-counterfeit-detection', require('./routes/visualCounterfeitDetection')); app.use('/api/cease-desist-drafter', require('./routes/ceaseDesistDrafter')); app.use('/api/franchise-brand-protection', require('./routes/franchiseBrandProtection')); app.use('/api/market-expansion-scouting', require('./routes/marketExpansionScouting')); app.use('/api/brand-dilution-scoring', require('./routes/brandDilutionScoring')); app.use('/api/uspto-wipo-feed', require('./routes/usptoWipoFeed'));
+
+// === Batch 08 Gaps & Frontend Mounts ===
+app.use('/api/gap-no-ai-for-counterfeit-image-analysis-computer-vision', require('./routes/gapNoAiForCounterfeitImageAnalysisComputerVision'));
+app.use('/api/gap-no-ai-for-automated-cease-and-desist-drafting-beyond-stub', require('./routes/gapNoAiForAutomatedCeaseAndDesistDraftingBeyondStub'));
+app.use('/api/gap-no-predictive-enforcement-outcome-model', require('./routes/gapNoPredictiveEnforcementOutcomeModel'));
+app.use('/api/gap-no-direct-integration-with-uspto-wipo-databases-only', require('./routes/gapNoDirectIntegrationWithUsptoWipoDatabasesOnly'));
+app.use('/api/gap-no-integration-with-law-firms-for-enforcement-workflow', require('./routes/gapNoIntegrationWithLawFirmsForEnforcementWorkflow'));
+app.use('/api/gap-no-multi-language-support', require('./routes/gapNoMultiLanguageSupport'));
+app.use('/api/gap-no-geographic-jurisdiction-filtering', require('./routes/gapNoGeographicJurisdictionFiltering'));
+app.use('/api/gap-no-webhooks-for-real-time-alert-delivery', require('./routes/gapNoWebhooksForRealTimeAlertDelivery'));
+app.use('/api/gap-no-notifications-routing-beyond-alerts-js', require('./routes/gapNoNotificationsRoutingBeyondAlertsJs'));
 
 app.listen(PORT, () => {
   console.log(`Trademark Monitor API running on port ${PORT}`);

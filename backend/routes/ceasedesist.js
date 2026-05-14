@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/pool');
-const { callOpenRouter } = require('../services/openrouter');
+const { callOpenRouter, parseAIJson } = require('../services/openrouter');
+const PDFDocument = require('pdfkit');
 
 router.get('/', async (req, res) => {
   try {
@@ -64,6 +65,53 @@ router.post('/generate', async (req, res) => {
     );
     res.json({ ...result.rows[0], letter_content: letterContent });
   } catch (error) { res.status(500).json({ error: error.message }); }
+});
+
+// GET /api/cease-desist/:id/generate-pdf
+router.get('/:id/generate-pdf', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM cease_desist_letters WHERE id = $1', [req.params.id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Letter not found' });
+    const letter = result.rows[0];
+
+    const doc = new PDFDocument({ margin: 50 });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="cease-desist-${letter.id}.pdf"`);
+    doc.pipe(res);
+
+    // Header
+    doc.fontSize(18).font('Helvetica-Bold').text('CEASE AND DESIST NOTICE', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(10).font('Helvetica').text(`Case Reference: CD-${String(letter.id).padStart(4, '0')}`, { align: 'right' });
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, { align: 'right' });
+    doc.moveDown();
+
+    // Recipient
+    doc.fontSize(12).font('Helvetica-Bold').text('TO:');
+    doc.font('Helvetica').fontSize(11).text(letter.recipient_name || 'Recipient');
+    if (letter.recipient_email) doc.text(letter.recipient_email);
+    doc.moveDown();
+
+    // Subject
+    doc.fontSize(12).font('Helvetica-Bold').text('RE: Infringement of Trademark Rights');
+    doc.font('Helvetica').fontSize(10).text(`Trademark: ${letter.trademark}`);
+    doc.text(`Type: ${letter.infringement_type}`);
+    doc.moveDown();
+
+    // Body
+    doc.fontSize(11).font('Helvetica').text(letter.letter_content || 'Letter content not available.', { lineGap: 4 });
+    doc.moveDown(2);
+
+    // Signature block
+    doc.font('Helvetica-Bold').text('Sincerely,');
+    doc.font('Helvetica').text('\n\n_________________________');
+    doc.text('Authorized Representative');
+    doc.text('Date: ___________________');
+
+    doc.end();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;
