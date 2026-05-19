@@ -48,6 +48,12 @@ const navGroups = [
       { to: '/audit', icon: '\uD83D\uDCCB', label: 'Audit Trail' },
     ]
   },
+  {
+    label: 'Custom',
+    items: [
+      { to: '/custom-views', icon: '\uD83D\uDCCA', label: 'Brand Views' },
+    ]
+  },
 ]
 
 export default function Layout({ children }) {

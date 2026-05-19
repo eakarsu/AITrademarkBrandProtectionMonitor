@@ -57,6 +57,9 @@ app.use('/api/alerts', require('./routes/alerts'));
 app.use('/api/audit-logs', require('./routes/audit'));
 app.use('/api/ai', require('./routes/ai'));
 
+// Custom Views (Brand Views) - must be mounted BEFORE 404 handler
+app.use('/api/custom-views', require('./routes/customViews'));
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

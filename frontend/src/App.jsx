@@ -39,6 +39,7 @@ import GapNoMultiLanguageSupport from './pages/GapNoMultiLanguageSupport'
 import GapNoGeographicJurisdictionFiltering from './pages/GapNoGeographicJurisdictionFiltering'
 import GapNoWebhooksForRealTimeAlertDelivery from './pages/GapNoWebhooksForRealTimeAlertDelivery'
 import GapNoNotificationsRoutingBeyondAlertsJs from './pages/GapNoNotificationsRoutingBeyondAlertsJs'
+import CustomViewsPage from './pages/CustomViewsPage'
 
 function ProtectedRoute({ children }) {
   if (!isAuthenticated()) return <Navigate to="/login" replace />
@@ -85,6 +86,7 @@ export default function App() {
       <Route path="/gap-no-geographic-jurisdiction-filtering" element={<ProtectedRoute><GapNoGeographicJurisdictionFiltering /></ProtectedRoute>} />
       <Route path="/gap-no-webhooks-for-real-time-alert-delivery" element={<ProtectedRoute><GapNoWebhooksForRealTimeAlertDelivery /></ProtectedRoute>} />
       <Route path="/gap-no-notifications-routing-beyond-alerts-js" element={<ProtectedRoute><GapNoNotificationsRoutingBeyondAlertsJs /></ProtectedRoute>} />
+      <Route path="/custom-views" element={<ProtectedRoute><CustomViewsPage /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
