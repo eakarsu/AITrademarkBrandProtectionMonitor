@@ -3,6 +3,8 @@ const router = express.Router();
 const pool = require('../db/pool');
 const { callOpenRouter, parseAIJson } = require('../services/openrouter');
 const rateLimit = require('express-rate-limit');
+let _ipKeyGenerator;
+try { _ipKeyGenerator = require('express-rate-limit').ipKeyGenerator; } catch (e) { /* noop */ }
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
@@ -11,7 +13,7 @@ const path = require('path');
 const aiRateLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 20,
-  keyGenerator: (req) => req.user ? 'user:' + (req.user.id || req.user.userId) : req.ip,
+  keyGenerator: (req, res) => req.user ? 'user:' + (req.user.id || req.user.userId) : (typeof _ipKeyGenerator === 'function' ? _ipKeyGenerator(req, res) : req.ip),
   message: { error: 'AI rate limit exceeded. Try again in an hour.' },
 });
 

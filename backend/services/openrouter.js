@@ -1,5 +1,5 @@
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'anthropic/claude-3-5-sonnet-20241022';
+const DEFAULT_MODEL = 'anthropic/claude-haiku-4.5';
 
 async function callOpenRouter(prompt, systemPrompt = 'You are a helpful AI assistant specializing in trademark and brand protection.') {
   const apiKey = process.env.OPENROUTER_API_KEY;
@@ -14,7 +14,7 @@ async function callOpenRouter(prompt, systemPrompt = 'You are a helpful AI assis
       'X-Title': 'AI Trademark Monitor'
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: process.env.OPENROUTER_MODEL || DEFAULT_MODEL,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
