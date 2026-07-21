@@ -1,0 +1,30 @@
+module.exports={
+  caseType:'reviewed_trademark_protection_matter',initialState:'matter_registered',
+  states:['matter_registered','sources_verified','rules_versioned','evidence_review','risk_assessed','draft_prepared','qualified_review','client_approved','delivery_queued','delivered','delivery_failed','corrected','legal_hold','closed'],
+  createRoles:['brand_counsel','matter_manager'],assessmentRoles:['brand_analyst','source_reviewer','qualified_reviewer'],auditRoles:['matter_manager','privacy_reviewer','auditor'],connectorRoles:['integration_operator','matter_manager'],
+  evidenceKinds:['matter_intake','registry_source','trademark_record','jurisdiction_record','effective_date_record','conflict_analysis','marketplace_evidence','privilege_record','redaction_report','deadline_calculation','adverse_case_fixture','risk_report','draft_digest','qualified_review','client_approval','signed_delivery','delivery_failure','correction_record','legal_hold_record'],
+  requiredSignals:['registryVersion','ruleVersion','documentVersion','jurisdictionVersion','policyVersion','rightsStatus','consentStatus','effectiveDateStatus','sourceConflictStatus','privilegeStatus','redactionStatus','deadlineStatus','adverseCaseStatus'],
+  professionalBoundary:'Monitoring, risk scores, and cease-and-desist text are informational drafts, not legal advice, filing, enforcement, representation, or outcome prediction. Qualified authorized counsel reviews all actions.',
+  connectors:[{name:'trusted_registry',purpose:'USPTO/WIPO/other signed registry snapshots'},{name:'filing_esignature',purpose:'signed delivery status; filing requires approval'},{name:'case_matter',purpose:'authoritative ownership and deadline versions'},{name:'document_vault',purpose:'encrypted privileged evidence pointers'},{name:'identity',purpose:'verified client and counsel receipts'},{name:'notification',purpose:'approved alert and delivery receipts'},{name:'marketplace_monitor',purpose:'versioned observation receipts only'}],
+  transitions:[
+    {from:'matter_registered',action:'verify_sources',to:'sources_verified',roles:['source_reviewer'],requiresEvidence:true},
+    {from:'sources_verified',action:'lock_rules',to:'rules_versioned',roles:['source_reviewer','qualified_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'rules_versioned',action:'review_evidence',to:'evidence_review',roles:['brand_analyst','privacy_reviewer'],requiresEvidence:true},
+    {from:'evidence_review',action:'record_risk_assessment',to:'risk_assessed',roles:['brand_analyst','qualified_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'risk_assessed',action:'record_draft',to:'draft_prepared',roles:['brand_counsel'],requiresEvidence:true},
+    {from:'draft_prepared',action:'submit_qualified_review',to:'qualified_review',roles:['qualified_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'qualified_review',action:'record_client_approval',to:'client_approved',roles:['brand_counsel','matter_manager'],requiresEvidence:true,dualControl:true},
+    {from:'client_approved',action:'queue_delivery',to:'delivery_queued',roles:['matter_manager'],requiresEvidence:true,dualControl:true},
+    {from:'delivery_queued',action:'record_delivery',to:'delivered',roles:['integration_operator'],requiresEvidence:true},
+    {from:'delivery_queued',action:'record_delivery_failure',to:'delivery_failed',roles:['integration_operator'],requiresEvidence:true},
+    {from:'delivery_failed',action:'record_correction',to:'corrected',roles:['brand_counsel','qualified_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'delivered',action:'place_legal_hold',to:'legal_hold',roles:['matter_manager','privacy_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'corrected',action:'place_legal_hold',to:'legal_hold',roles:['matter_manager','privacy_reviewer'],requiresEvidence:true,dualControl:true},
+    {from:'delivered',action:'close_matter',to:'closed',roles:['matter_manager'],requiresEvidence:true},
+    {from:'legal_hold',action:'close_matter',to:'closed',roles:['matter_manager','auditor'],requiresEvidence:true}
+  ],
+  acceptedFixture:{registryVersion:'reg1',ruleVersion:'r1',documentVersion:'d1',jurisdictionVersion:'j1',policyVersion:'p1',rightsStatus:'verified',consentStatus:'verified',effectiveDateStatus:'current',sourceConflictStatus:'resolved',privilegeStatus:'protected',redactionStatus:'passed',deadlineStatus:'verified',adverseCaseStatus:'reviewed'},
+  rejectedFixture:{registryVersion:'reg1',ruleVersion:'r1',documentVersion:'d1',jurisdictionVersion:'j1',policyVersion:'p1',rightsStatus:'verified',consentStatus:'verified',effectiveDateStatus:'stale',sourceConflictStatus:'resolved',privilegeStatus:'protected',redactionStatus:'passed',deadlineStatus:'verified',adverseCaseStatus:'reviewed'},
+  readyDisposition:'qualified_trademark_counsel_review_required',holdDisposition:'jurisdiction_source_privilege_or_deadline_hold',decisionField:'enforcementCommand',
+  assess:x=>{const ready=x.rightsStatus==='verified'&&x.consentStatus==='verified'&&x.effectiveDateStatus==='current'&&x.sourceConflictStatus==='resolved'&&x.privilegeStatus==='protected'&&x.redactionStatus==='passed'&&x.deadlineStatus==='verified'&&x.adverseCaseStatus==='reviewed';return{disposition:ready?'qualified_trademark_counsel_review_required':'jurisdiction_source_privilege_or_deadline_hold',enforcementCommand:null,filingCommand:null,legalAdvice:null,outcomePrediction:null,versions:{registry:x.registryVersion,rules:x.ruleVersion,documents:x.documentVersion,jurisdiction:x.jurisdictionVersion}};}
+};

@@ -1,6 +1,12 @@
 -- AI Trademark & Brand Protection Monitor - Seed Data
 -- Truncate all tables before inserting
 
+\if :{?allow_demo_seed}
+\else
+\echo 'Demo seed disabled; pass -v allow_demo_seed=1 only for an isolated non-production database.'
+\quit
+\endif
+
 TRUNCATE TABLE audit_logs, alerts, reports, legal_cases, marketplace_listings, logo_analyses, competitors, sentiment_analyses, trademark_searches, cease_desist_letters, counterfeits, social_mentions, domains, infringements, trademarks, users RESTART IDENTITY CASCADE;
 
 -- ===================== USERS =====================

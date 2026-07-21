@@ -9,7 +9,7 @@ function authenticateToken(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-key');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
@@ -24,7 +24,7 @@ function optionalAuth(req, res, next) {
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret-key');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
     } catch (error) {
       // Token invalid but we don't block the request

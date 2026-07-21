@@ -19,8 +19,8 @@ async function auditMiddleware(req, res, next) {
           req.method,
           req.path.split('/').filter(Boolean)[0] || 'unknown',
           req.params?.id || null,
-          JSON.stringify({ body: req.body, status: statusCode }).substring(0, 500),
-          req.ip,
+          JSON.stringify({ status: statusCode }),
+          null,
         ]
       ).catch(err => console.error('Audit log error:', err.message));
     }

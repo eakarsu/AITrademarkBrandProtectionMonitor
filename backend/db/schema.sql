@@ -1,6 +1,12 @@
 -- AI Trademark & Brand Protection Monitor - Database Schema
 -- Drop all tables in reverse dependency order
 
+\if :{?allow_legacy_reset}
+\else
+\echo 'Legacy destructive reset disabled; pass -v allow_legacy_reset=1 only for an isolated non-production database.'
+\quit
+\endif
+
 DROP TABLE IF EXISTS audit_logs CASCADE;
 DROP TABLE IF EXISTS alerts CASCADE;
 DROP TABLE IF EXISTS reports CASCADE;
