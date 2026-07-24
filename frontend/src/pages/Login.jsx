@@ -10,8 +10,8 @@ export default function Login() {
   const navigate = useNavigate()
 
   function autoFill() {
-    setEmail('demo@trademark.com')
-    setPassword('password123')
+    setEmail(import.meta.env.VITE_DEMO_EMAIL || '')
+    setPassword(import.meta.env.VITE_DEMO_PASSWORD || '')
   }
 
   async function handleSubmit(e) {
