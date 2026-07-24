@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const { authenticateToken: auth } = require('./middleware/auth');
 const { validateRuntime } = require('./governance/runtime');
 const { createProviderGate } = require('./governance/providerGate');
+const { prepareRuntime } = require('./runtime-bootstrap');
 
 validateRuntime();
 
@@ -92,6 +93,14 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: 'Internal server error' });
 });
 
-if (require.main === module) app.listen(PORT, () => console.log(`Trademark Monitor API running on port ${PORT}`));
+async function start() {
+  await prepareRuntime();
+  return app.listen(PORT, () => console.log(`Trademark Monitor API running on port ${PORT}`));
+}
+
+if (require.main === module) start().catch((error) => {
+  console.error('Failed to start server:', error.message);
+  process.exitCode = 1;
+});
 
 module.exports = app;

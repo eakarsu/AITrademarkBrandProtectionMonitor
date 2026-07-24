@@ -6,6 +6,10 @@ if [[ ! -f "$project_dir/.env" ]]; then
   echo "Missing $project_dir/.env; copy .env.example and provide real values." >&2
   exit 1
 fi
+set -a
+# shellcheck disable=SC1090
+source "$project_dir/.env"
+set +a
 BACKEND_PORT="${BACKEND_PORT:?BACKEND_PORT is required}"
 FRONTEND_PORT="${FRONTEND_PORT:?FRONTEND_PORT is required}"
 [[ -n "${DATABASE_URL:-}" ]] || { echo 'DATABASE_URL is required.' >&2; exit 1; }
@@ -24,10 +28,9 @@ done
 for port in "$BACKEND_PORT" "$FRONTEND_PORT"; do
   if lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then echo "Port $port is occupied; no process was terminated." >&2; exit 1; fi
 done
-
-(cd "$project_dir/backend" && BACKEND_PORT="$BACKEND_PORT" npm start) &
+(cd "$project_dir/backend" && exec node server.js) &
 backend_pid=$!
-(cd "$project_dir/frontend" && BACKEND_URL="http://127.0.0.1:$BACKEND_PORT" npm run dev -- --host "${FRONTEND_HOST:-127.0.0.1}" --port "$FRONTEND_PORT" --strictPort) &
+(cd "$project_dir/frontend" && BACKEND_URL="http://127.0.0.1:$BACKEND_PORT" exec ./node_modules/.bin/vite --host "${FRONTEND_HOST:-127.0.0.1}" --port "$FRONTEND_PORT" --strictPort) &
 frontend_pid=$!
 
 cleanup() {

@@ -35,25 +35,23 @@ const upload = multer({
 });
 
 async function persistAIResult(userId, endpoint, inputData, result) {
-  try {
-    await pool.query(
-      `CREATE TABLE IF NOT EXISTS ai_results (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER,
-        endpoint VARCHAR(100),
-        input_data JSONB,
-        result JSONB,
-        created_at TIMESTAMP DEFAULT NOW()
-      )`
-    );
-    await pool.query(
-      'INSERT INTO ai_results (user_id, endpoint, input_data, result) VALUES ($1, $2, $3, $4)',
-      [userId, endpoint, JSON.stringify(inputData), JSON.stringify(result)]
-    );
-  } catch (err) {
-    console.error('Failed to persist AI result:', err.message);
-  }
+  await pool.query(
+    'INSERT INTO ai_results (user_id, endpoint, input_data, result) VALUES ($1, $2, $3, $4)',
+    [userId, endpoint, JSON.stringify(inputData), JSON.stringify(result)]
+  );
 }
+
+router.get('/history', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id,endpoint,input_data,result,created_at FROM ai_results WHERE user_id=$1 ORDER BY created_at DESC LIMIT 50',
+      [req.user.id]
+    );
+    res.json({ history: result.rows });
+  } catch (error) {
+    res.status(503).json({ error: 'AI history unavailable' });
+  }
+});
 
 // General-purpose AI brand protection assistant
 router.post('/chat', aiRateLimiter, async (req, res) => {

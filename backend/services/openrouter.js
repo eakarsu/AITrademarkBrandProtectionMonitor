@@ -1,11 +1,11 @@
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_MODEL = 'anthropic/claude-haiku-4.5';
 
 async function callOpenRouter(prompt, systemPrompt = 'You are a helpful AI assistant specializing in trademark and brand protection.') {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY is not configured');
 
-  const response = await fetch(OPENROUTER_URL, {
+  const baseUrl = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
+  const response = await fetch(`${baseUrl.replace(/\/$/, '')}/chat/completions`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,

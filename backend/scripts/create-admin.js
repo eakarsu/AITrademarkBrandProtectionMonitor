@@ -8,11 +8,13 @@ async function main() {
   const password = process.env.PROVISION_ADMIN_PASSWORD || '';
   const name = (process.env.PROVISION_ADMIN_NAME || '').trim();
   if (!email || !name || password.length < 12) throw new Error('Admin email, name, and a 12+ character password are required');
-  const existing = await pool.query('SELECT id FROM users WHERE lower(email) = $1', [email]);
-  if (existing.rows.length) return console.log('Initial admin already exists; credentials were not changed.');
   const passwordHash = await bcrypt.hash(password, 12);
-  await pool.query('INSERT INTO users (email, password, name, role) VALUES ($1, $2, $3, $4)', [email, passwordHash, name, 'admin']);
-  console.log('Initial admin created.');
+  await pool.query(
+    `INSERT INTO users (email,password,name,role) VALUES ($1,$2,$3,'admin')
+     ON CONFLICT(email) DO UPDATE SET password=EXCLUDED.password,name=EXCLUDED.name,role='admin'`,
+    [email, passwordHash, name]
+  );
+  console.log('Runtime admin provisioned.');
 }
 
 main().catch((error) => { console.error(error.message); process.exitCode = 1; }).finally(() => pool.end());
