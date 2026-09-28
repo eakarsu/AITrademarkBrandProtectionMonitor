@@ -40,7 +40,7 @@ export default function Login() {
         {error && <div className="login-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <button type="button" className="btn-autofill" onClick={autoFill}>
-            Auto-fill Demo Credentials
+            Auto Fill Demo Credentials
           </button>
           <div className="form-group">
             <label>Email</label>
