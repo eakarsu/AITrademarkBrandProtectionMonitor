@@ -9,9 +9,16 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  function autoFill() {
-    setEmail(import.meta.env.VITE_DEMO_EMAIL || '')
-    setPassword(import.meta.env.VITE_DEMO_PASSWORD || '')
+  function fillDemoCredentials() {
+    const demoEmail = import.meta.env.VITE_DEMO_EMAIL
+    const demoPassword = import.meta.env.VITE_DEMO_PASSWORD
+    if (import.meta.env.VITE_ENABLE_DEMO_CREDENTIAL_AUTOFILL !== 'true' || !demoEmail || !demoPassword) {
+      setError('Demo credentials are unavailable in this local configuration.')
+      return
+    }
+    setEmail(demoEmail)
+    setPassword(demoPassword)
+    setError('')
   }
 
   async function handleSubmit(e) {
@@ -37,10 +44,10 @@ export default function Login() {
           <h1>AI Trademark &amp; Brand Protection</h1>
           <p>Monitor, detect, and protect your brand</p>
         </div>
-        {error && <div className="login-error">{error}</div>}
+        {error && <div className="login-error" role="alert">{error}</div>}
         <form onSubmit={handleSubmit}>
-          <button type="button" className="btn-autofill" onClick={autoFill}>
-            Auto Fill Demo Credentials
+          <button type="button" className="btn-autofill" onClick={fillDemoCredentials}>
+            Fill demo credentials
           </button>
           <div className="form-group">
             <label>Email</label>

@@ -1,3 +1,4 @@
+import NativeAIControls from "../components/NativeAIControls.jsx";
 import React, { useState, useEffect } from 'react'
 import { api } from '../api'
 import DetailModal from '../components/DetailModal'
@@ -24,7 +25,7 @@ export default function CeaseDesistGenerator() {
 
   async function load() {
     setLoading(true)
-    try { const d = await api.get('/cease-desist'); setItems(Array.isArray(d) ? d : d?.data || []) } catch (e) { console.error(e) }
+    try { const d = await api.get('/cease-desist'); setItems(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : []) } catch (e) { console.error(e) }
     setLoading(false)
   }
 
@@ -56,7 +57,7 @@ export default function CeaseDesistGenerator() {
   const showForm = editing || creating
 
   return (
-    <div>
+    <NativeAIControls busy={loading} context="TrademarkBrandProtectionMonitor"><div>
       <div className="page-header">
         <div className="page-header-left"><h1>{'\uD83D\uDCDC'} C&D Letter Generator</h1><p>AI-generated cease and desist letters</p></div>
         <button className="btn btn-primary" onClick={openCreate}>+ Add New</button>
@@ -74,12 +75,12 @@ export default function CeaseDesistGenerator() {
           <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiRecipient('AudioDeals_Store'); setAiEmail('seller@amazon.com'); setAiTrademark('SoundWave Audio'); setAiType('counterfeiting'); }}>Sample 3</button>
         </div>
         <div className="ai-panel-inputs">
-          <input className="form-input" placeholder="Recipient name..." value={aiRecipient} onChange={e => setAiRecipient(e.target.value)} />
-          <input className="form-input" placeholder="Recipient email..." value={aiEmail} onChange={e => setAiEmail(e.target.value)} />
+          <input data-ai-field={"aiRecipient"} className="form-input" placeholder="Recipient name..." value={aiRecipient} onChange={e => setAiRecipient(e.target.value)} />
+          <input data-ai-field={"aiEmail"} className="form-input" placeholder="Recipient email..." value={aiEmail} onChange={e => setAiEmail(e.target.value)} />
         </div>
         <div className="ai-panel-inputs">
-          <input className="form-input" placeholder="Trademark being infringed..." value={aiTrademark} onChange={e => setAiTrademark(e.target.value)} />
-          <select className="form-select" value={aiType} onChange={e => setAiType(e.target.value)}>
+          <input data-ai-field={"aiTrademark"} className="form-input" placeholder="Trademark being infringed..." value={aiTrademark} onChange={e => setAiTrademark(e.target.value)} />
+          <select data-ai-field={"aiType"} className="form-select" value={aiType} onChange={e => setAiType(e.target.value)}>
             <option value="">Select infringement type...</option>
             <option value="counterfeiting">Counterfeiting</option>
             <option value="domain_squatting">Domain Squatting</option>
@@ -91,11 +92,7 @@ export default function CeaseDesistGenerator() {
         <button className="btn btn-primary" onClick={handleGenerate} disabled={aiLoading || !aiRecipient || !aiTrademark}>
           {aiLoading ? <><span className="spinner" /> Generating...</> : 'Generate Letter'}
         </button>
-        {aiResult && (aiResult.letter_content ? (
-          <div className="ai-output" style={{marginTop:20}}>
-            <div className="letter-content">{aiResult.letter_content}</div>
-          </div>
-        ) : <AIOutputDisplay data={aiResult} />)}
+        {aiResult && <AIOutputDisplay data={aiResult.letter_content ?? aiResult} />}
       </div>
 
       {loading ? <div className="loading-spinner"><div className="spinner" /> Loading...</div> : (
@@ -135,11 +132,11 @@ export default function CeaseDesistGenerator() {
                 <div className="form-group"><label>Recipient Email</label><input className="form-input" value={form.recipientEmail || form.recipient_email || ''} onChange={e => setForm({...form, recipientEmail: e.target.value})} /></div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>Trademark</label><input className="form-input" value={form.trademark || ''} onChange={e => setForm({...form, trademark: e.target.value})} /></div>
+                <div className="form-group"><label>Trademark</label><input data-ai-field={"trademark"} className="form-input" value={form.trademark || ''} onChange={e => setForm({...form, trademark: e.target.value})} /></div>
                 <div className="form-group"><label>Infringement Type</label><input className="form-input" value={form.infringementType || form.infringement_type || ''} onChange={e => setForm({...form, infringementType: e.target.value})} /></div>
               </div>
               <div className="form-group"><label>Status</label>
-                <select className="form-select" value={form.status || 'draft'} onChange={e => setForm({...form, status: e.target.value})}><option value="draft">Draft</option><option value="sent">Sent</option><option value="acknowledged">Acknowledged</option><option value="resolved">Resolved</option></select>
+                <select data-ai-field={"status"} className="form-select" value={form.status || 'draft'} onChange={e => setForm({...form, status: e.target.value})}><option value="draft">Draft</option><option value="sent">Sent</option><option value="acknowledged">Acknowledged</option><option value="resolved">Resolved</option></select>
               </div>
               <div className="form-group"><label>Letter Content</label><textarea className="form-textarea" style={{minHeight:150}} value={form.letterContent || form.letter_content || ''} onChange={e => setForm({...form, letterContent: e.target.value})} /></div>
             </div>
@@ -153,16 +150,16 @@ export default function CeaseDesistGenerator() {
                 <div className="detail-field"><div className="detail-label">Status</div><div className="detail-value"><span className={`badge badge-${selected.status === 'sent' ? 'success' : 'warning'}`}>{selected.status}</span></div></div>
                 <div className="detail-field"><div className="detail-label">AI Generated</div><div className="detail-value">{selected.ai_generated ? 'Yes' : 'No'}</div></div>
               </div>
-              {selected.letter_content && (
+              {selected.letter_content !== undefined && selected.letter_content !== null && (
                 <div style={{marginTop:20}}>
                   <div className="section-title">Letter Content</div>
-                  <div className="letter-content">{selected.letter_content}</div>
+                  <AIOutputDisplay data={selected.letter_content} />
                 </div>
               )}
             </div>
           )}
         </DetailModal>
       )}
-    </div>
+    </div></NativeAIControls>
   )
 }

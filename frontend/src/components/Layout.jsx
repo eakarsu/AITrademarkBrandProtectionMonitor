@@ -1,3 +1,4 @@
+import AIReportLibrary from "./AIReportLibrary";
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { clearToken } from '../api'
@@ -96,7 +97,7 @@ export default function Layout({ children }) {
             <span>&#x2192;</span> Sign Out
           </button>
         </div>
-      </aside>
+      <AIReportLibrary /></aside>
       <main className="main-content">
         {children}
       </main>

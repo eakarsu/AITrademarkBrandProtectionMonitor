@@ -1,3 +1,4 @@
+import NativeAIControls from "../components/NativeAIControls.jsx";
 import React, { useState, useEffect } from 'react'
 import { api } from '../api'
 import DetailModal from '../components/DetailModal'
@@ -21,7 +22,7 @@ export default function DomainMonitoring() {
 
   async function load() {
     setLoading(true)
-    try { const d = await api.get('/domains'); setItems(Array.isArray(d) ? d : d?.data || []) } catch (e) { console.error(e) }
+    try { const d = await api.get('/domains'); setItems(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : []) } catch (e) { console.error(e) }
     setLoading(false)
   }
 
@@ -54,7 +55,7 @@ export default function DomainMonitoring() {
   const tl = v => v === 'high' || v === 'critical' ? 'danger' : v === 'medium' ? 'warning' : 'success'
 
   return (
-    <div>
+    <NativeAIControls busy={loading} context="TrademarkBrandProtectionMonitor"><div>
       <div className="page-header">
         <div className="page-header-left">
           <h1>{'\uD83C\uDF10'} Domain Monitoring</h1>
@@ -75,7 +76,7 @@ export default function DomainMonitoring() {
           <button type="button" className="btn btn-outline btn-sm" onClick={() => { setScanDomain('medicare-plus.com'); }}>Sample 3</button>
         </div>
         <div className="ai-panel-inputs">
-          <input className="form-input" placeholder="Enter domain name to scan..." value={scanDomain} onChange={e => setScanDomain(e.target.value)} />
+          <input data-ai-field={"scanDomain"} className="form-input" placeholder="Enter domain name to scan..." value={scanDomain} onChange={e => setScanDomain(e.target.value)} />
         </div>
         <button className="btn btn-primary" onClick={handleScan} disabled={scanLoading || !scanDomain}>
           {scanLoading ? <><span className="spinner" /> Scanning...</> : 'Scan Domain'}
@@ -114,21 +115,21 @@ export default function DomainMonitoring() {
         >
           {showForm ? (
             <div>
-              <div className="form-group"><label>Domain</label><input className="form-input" value={form.domain || ''} onChange={e => setForm({ ...form, domain: e.target.value })} /></div>
+              <div className="form-group"><label>Domain</label><input data-ai-field={"domain"} className="form-input" value={form.domain || ''} onChange={e => setForm({ ...form, domain: e.target.value })} /></div>
               <div className="form-row">
-                <div className="form-group"><label>Similarity Score (%)</label><input className="form-input" type="number" value={form.similarityScore || ''} onChange={e => setForm({ ...form, similarityScore: e.target.value })} /></div>
-                <div className="form-group"><label>Registrar</label><input className="form-input" value={form.registrar || ''} onChange={e => setForm({ ...form, registrar: e.target.value })} /></div>
+                <div className="form-group"><label>Similarity Score (%)</label><input data-ai-field={"similarityScore"} className="form-input" type="number" value={form.similarityScore || ''} onChange={e => setForm({ ...form, similarityScore: e.target.value })} /></div>
+                <div className="form-group"><label>Registrar</label><input data-ai-field={"registrar"} className="form-input" value={form.registrar || ''} onChange={e => setForm({ ...form, registrar: e.target.value })} /></div>
               </div>
               <div className="form-row">
                 <div className="form-group"><label>Threat Level</label>
-                  <select className="form-select" value={form.threatLevel || 'low'} onChange={e => setForm({ ...form, threatLevel: e.target.value })}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
+                  <select data-ai-field={"threatLevel"} className="form-select" value={form.threatLevel || 'low'} onChange={e => setForm({ ...form, threatLevel: e.target.value })}><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select>
                 </div>
                 <div className="form-group"><label>Status</label>
-                  <select className="form-select" value={form.status || 'active'} onChange={e => setForm({ ...form, status: e.target.value })}><option value="active">Active</option><option value="monitoring">Monitoring</option><option value="taken_down">Taken Down</option></select>
+                  <select data-ai-field={"status"} className="form-select" value={form.status || 'active'} onChange={e => setForm({ ...form, status: e.target.value })}><option value="active">Active</option><option value="monitoring">Monitoring</option><option value="taken_down">Taken Down</option></select>
                 </div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>IP Address</label><input className="form-input" value={form.ipAddress || ''} onChange={e => setForm({ ...form, ipAddress: e.target.value })} /></div>
+                <div className="form-group"><label>IP Address</label><input data-ai-field={"ipAddress"} className="form-input" value={form.ipAddress || ''} onChange={e => setForm({ ...form, ipAddress: e.target.value })} /></div>
                 <div className="form-group"><label>Registration Date</label><input className="form-input" type="date" value={form.registrationDate ? form.registrationDate.substring(0, 10) : ''} onChange={e => setForm({ ...form, registrationDate: e.target.value })} /></div>
               </div>
             </div>
@@ -149,6 +150,6 @@ export default function DomainMonitoring() {
           )}
         </DetailModal>
       )}
-    </div>
+    </div></NativeAIControls>
   )
 }

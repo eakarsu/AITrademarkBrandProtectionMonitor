@@ -23,7 +23,7 @@ export default function SocialMediaMonitoring() {
 
   async function load() {
     setLoading(true)
-    try { const d = await api.get('/social-mentions'); setItems(Array.isArray(d) ? d : d?.data || []) } catch (e) { console.error(e) }
+    try { const d = await api.get('/social-mentions'); setItems(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : []) } catch (e) { console.error(e) }
     setLoading(false)
   }
 

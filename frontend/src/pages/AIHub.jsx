@@ -1,3 +1,5 @@
+import AIFieldPresets, { completeExample } from '../components/AIFieldPresets';
+import { protectPresetRequest } from '../components/SampleIntegrity';
 import React, { useState } from 'react'
 import { api } from '../api'
 import AIOutputDisplay from '../components/AIOutputDisplay'
@@ -36,7 +38,7 @@ const aiTools = [
   ] },
   { id: 'franchise-compliance', icon: '🏪', title: 'Franchise Compliance Scoring', desc: 'Score brand-standards compliance across franchise locations', endpoint: '/ai/franchise-compliance', fields: [
     { key: 'brand_name', label: 'Brand Name', placeholder: 'e.g., NovaTech Cafe' },
-    { key: 'locations', label: 'Locations (JSON array)', type: 'textarea', placeholder: '[{"location_id":"L1","city":"Austin","last_audit_score":78,"observations":["signage faded","menu out of date"]}]' },
+    { key: 'locations', label: 'Locations (JSON array)', type: 'textarea', placeholder: '[{"city":"Fictional Austin location","last_audit_score":78,"observations":["signage faded","menu out of date"]}]' },
     { key: 'brand_standards', label: 'Brand Standards (optional, text)', type: 'textarea', placeholder: 'e.g., signage colors, uniform requirements, customer-experience standards' },
   ] },
   { id: 'market-expansion', icon: '🌍', title: 'Market Expansion Scouting', desc: 'Recommend top markets for brand expansion (incl. trademark risk)', endpoint: '/ai/market-expansion', fields: [
@@ -144,7 +146,7 @@ const sampleData = {
     { label: 'Compliance 30d', period: 'Last 30 days', focusArea: 'Compliance' },
   ],
   'franchise-compliance': [
-    { label: 'NovaTech Cafe (3 locs)', brand_name: 'NovaTech Cafe', locations: '[{"location_id":"L1","city":"Austin","last_audit_score":78,"observations":["signage faded","menu out of date"]},{"location_id":"L2","city":"Denver","last_audit_score":92,"observations":["clean","compliant"]},{"location_id":"L3","city":"Miami","last_audit_score":64,"observations":["uniform violations","unauthorized promotions"]}]', brand_standards: 'Standard signage colors (blue/white), required uniforms, official menu only, customer-experience standards' },
+    { label: 'NovaTech Cafe (3 locs)', brand_name: 'NovaTech Cafe', locations: '[{"city":"Fictional Austin location","last_audit_score":78,"observations":["signage faded","menu out of date"]},{"location_id":"L2","city":"Denver","last_audit_score":92,"observations":["clean","compliant"]},{"location_id":"L3","city":"Miami","last_audit_score":64,"observations":["uniform violations","unauthorized promotions"]}]', brand_standards: 'Standard signage colors (blue/white), required uniforms, official menu only, customer-experience standards' },
     { label: 'AquaPure Stores', brand_name: 'AquaPure Retail', locations: '[{"location_id":"AP1","city":"Seattle","last_audit_score":85,"observations":["compliant"]},{"location_id":"AP2","city":"Portland","last_audit_score":71,"observations":["off-brand promotions","outdated logo"]}]', brand_standards: 'Approved logo only, no off-brand merchandise, brand-color signage' },
   ],
   'market-expansion': [
@@ -161,7 +163,7 @@ export default function AIHub() {
 
   function selectTool(tool) {
     setActiveTool(tool)
-    setFormData({})
+    setFormData(protectPresetRequest(completeExample(tool.fields.map(field => ({ ...field, type: /JSON/i.test(field.label || '') ? 'json' : field.type })), {}, 0, tool.title, formData), formData))
     setResult(null)
   }
 
@@ -221,15 +223,8 @@ export default function AIHub() {
                 <h3>{activeTool.icon} {activeTool.title}</h3>
               </div>
               <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginBottom: 16 }}>{activeTool.desc}</p>
-              {sampleData[activeTool.id] && (
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-                  {sampleData[activeTool.id].map((sample, si) => (
-                    <button key={si} type="button" className="btn btn-outline btn-sm" onClick={() => {
-                      const newData = {}; activeTool.fields.forEach(f => { if (sample[f.key] !== undefined) newData[f.key] = sample[f.key]; }); setFormData(newData);
-                    }}>{sample.label}</button>
-                  ))}
-                </div>
-              )}
+              <AIFieldPresets fields={activeTool.fields.map(field => ({ ...field, type: /JSON/i.test(field.label || '') ? 'json' : field.type }))} samples={sampleData[activeTool.id] || []} context={activeTool.title} disabled={loading} onFill={(sample, index) => setFormData(protectPresetRequest(completeExample(activeTool.fields.map(field => ({ ...field, type: /JSON/i.test(field.label || '') ? 'json' : field.type })), sample, index, activeTool.title, formData), formData))} />
+              <p role="note">Examples are fictional drafting inputs. Supply actual URLs and authorized record references manually. They do not verify infringement, grant approval or publish anything.</p>
               <div className="ai-panel-inputs" style={{ flexDirection: 'column' }}>
                 {activeTool.fields.map(field => (
                   <div key={field.key} style={{ width: '100%' }}>
@@ -238,14 +233,14 @@ export default function AIHub() {
                       <textarea
                         className="form-textarea"
                         placeholder={field.placeholder || ''}
-                        value={formData[field.key] || ''}
+                        value={formData[field.key] ?? ''}
                         onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
                         style={{ minHeight: 80 }}
                       />
                     ) : field.type === 'select' ? (
                       <select
                         className="form-select"
-                        value={formData[field.key] || ''}
+                        value={formData[field.key] ?? ''}
                         onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
                       >
                         <option value="">Select...</option>
@@ -255,7 +250,7 @@ export default function AIHub() {
                       <input
                         className="form-input"
                         placeholder={field.placeholder || ''}
-                        value={formData[field.key] || ''}
+                        value={formData[field.key] ?? ''}
                         onChange={e => setFormData({ ...formData, [field.key]: e.target.value })}
                       />
                     )}

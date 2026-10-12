@@ -24,7 +24,7 @@ export default function InfringementDetection() {
     setLoading(true)
     try {
       const data = await api.get('/infringements')
-      setItems(Array.isArray(data) ? data : data?.data || [])
+      setItems(Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [])
     } catch (e) { console.error(e) }
     setLoading(false)
   }

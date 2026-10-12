@@ -1,5 +1,7 @@
+import NativeAIControls from "../components/NativeAIControls.jsx";
 import React, { useState } from 'react'
 import { api } from '../api'
+import AIOutputDisplay from '../components/AIOutputDisplay'
 
 export default function DomainWatcher() {
   const [trademarkName, setTrademarkName] = useState('')
@@ -23,7 +25,7 @@ export default function DomainWatcher() {
   }
 
   return (
-    <div>
+    <NativeAIControls busy={loading} context="TrademarkBrandProtectionMonitor"><div>
       <div className="page-header">
         <h2>Domain Squatting Watcher</h2>
         <p className="page-header-sub">AI generates high-risk typosquat and cybersquatting domain variants for your trademark</p>
@@ -33,7 +35,7 @@ export default function DomainWatcher() {
         <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end' }}>
           <div style={{ flex: 1 }}>
             <label style={{ display: 'block', marginBottom: 6, fontSize: 13, color: '#888' }}>Trademark / Brand Name</label>
-            <input
+            <input data-ai-field={"trademarkName"}
               type="text"
               value={trademarkName}
               onChange={e => setTrademarkName(e.target.value)}
@@ -61,7 +63,7 @@ export default function DomainWatcher() {
       )}
 
       {result && !loading && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <><AIOutputDisplay data={result} /><div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           <div style={{ background: 'rgba(239,68,68,0.05)', borderRadius: 12, padding: 24, border: '1px solid rgba(239,68,68,0.2)' }}>
             <h3 style={{ marginBottom: 16, color: '#ef4444' }}>
               ⚠️ High-Risk Domains ({result.high_risk_domains?.length || 0})
@@ -100,8 +102,8 @@ export default function DomainWatcher() {
               </div>
             )}
           </div>
-        </div>
+        </div></>
       )}
-    </div>
+    </div></NativeAIControls>
   )
 }

@@ -35,10 +35,10 @@ export default function Dashboard() {
         const c = {}
         results.forEach((r, i) => {
           if (r.status === 'fulfilled') {
-            const data = Array.isArray(r.value) ? r.value : (r.value?.data || [])
+            const data = Array.isArray(r.value) ? r.value : Array.isArray(r.value?.data) ? r.value.data : []
             c[endpoints[i]] = data.length
-            if (endpoints[i] === '/alerts') setAlerts(data.slice(0, 5))
-            if (endpoints[i] === '/infringements') setInfringements(data.slice(0, 5))
+            if (endpoints[i] === '/alerts') setAlerts(data.slice(0, 15))
+            if (endpoints[i] === '/infringements') setInfringements(data.slice(0, 15))
           }
         })
         setCounts(c)

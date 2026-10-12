@@ -1,0 +1,107 @@
+[
+  {
+    "name": "CfAutomatedCDLetterDraftingWithJurisdictional",
+    "id": "cf-automated-c-d-letter-drafting-with-jurisdictional-legal/history",
+    "title": "Automated C&D letter drafting with jurisdictional legal language",
+    "description": "Prepare a professional advisory report for automated c&d letter drafting with jurisdictional legal language using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "CfBrandDilutionScoringAcrossCategories",
+    "id": "cf-brand-dilution-scoring-across-categories/history",
+    "title": "Brand dilution scoring across categories",
+    "description": "Prepare a professional advisory report for brand dilution scoring across categories using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "CfFranchiseBrandProtectionMonitoringFranchiseeCompliance",
+    "id": "cf-franchise-brand-protection-monitoring-franchisee-compliance/history",
+    "title": "Franchise brand protection monitoring franchisee compliance",
+    "description": "Prepare a professional advisory report for franchise brand protection monitoring franchisee compliance using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "CfMarketExpansionScoutingIdentifyingInfringementsInNew",
+    "id": "cf-market-expansion-scouting-identifying-infringements-in-new-geographies/history",
+    "title": "Market expansion scouting identifying infringements in new geographies",
+    "description": "Prepare a professional advisory report for market expansion scouting identifying infringements in new geographies using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "CfUsptoWipoLiveFeedIntegrationWithAuto",
+    "id": "cf-uspto-wipo-live-feed-integration-with-auto-renewal-tracking/history",
+    "title": "USPTO/WIPO live feed integration with auto-renewal tracking",
+    "description": "Prepare a professional advisory report for uspto/wipo live feed integration with auto-renewal tracking using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "CfVisualCounterfeitDetectionFromProductPhotos",
+    "id": "cf-visual-counterfeit-detection-from-product-photos/history",
+    "title": "Visual counterfeit detection from product photos",
+    "description": "Prepare a professional advisory report for visual counterfeit detection from product photos using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoAiForAutomatedCeaseAndDesist",
+    "id": "gap-no-ai-for-automated-cease-and-desist-drafting-beyond-stub/history",
+    "title": "No AI for automated cease-and-desist drafting beyond stub",
+    "description": "Prepare a professional advisory report for no ai for automated cease-and-desist drafting beyond stub using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoAiForCounterfeitImageAnalysisComputer",
+    "id": "gap-no-ai-for-counterfeit-image-analysis-computer-vision/history",
+    "title": "No AI for counterfeit image analysis (computer vision)",
+    "description": "Prepare a professional advisory report for no ai for counterfeit image analysis (computer vision) using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoDirectIntegrationWithUsptoWipoDatabases",
+    "id": "gap-no-direct-integration-with-uspto-wipo-databases-only/history",
+    "title": "No direct integration with USPTO, WIPO databases (only general integration module)",
+    "description": "Prepare a professional advisory report for no direct integration with uspto, wipo databases (only general integration module) using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoGeographicJurisdictionFiltering",
+    "id": "gap-no-geographic-jurisdiction-filtering/history",
+    "title": "No geographic jurisdiction filtering",
+    "description": "Prepare a professional advisory report for no geographic jurisdiction filtering using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoIntegrationWithLawFirmsForEnforcement",
+    "id": "gap-no-integration-with-law-firms-for-enforcement-workflow/history",
+    "title": "No integration with law firms for enforcement workflow",
+    "description": "Prepare a professional advisory report for no integration with law firms for enforcement workflow using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoMultiLanguageSupport",
+    "id": "gap-no-multi-language-support/history",
+    "title": "No multi-language support",
+    "description": "Prepare a professional advisory report for no multi-language support using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoNotificationsRoutingBeyondAlertsJs",
+    "id": "gap-no-notifications-routing-beyond-alerts-js/history",
+    "title": "No notifications routing beyond alerts.js",
+    "description": "Prepare a professional advisory report for no notifications routing beyond alerts.js using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoPredictiveEnforcementOutcomeModel",
+    "id": "gap-no-predictive-enforcement-outcome-model/history",
+    "title": "No predictive enforcement outcome model",
+    "description": "Prepare a professional advisory report for no predictive enforcement outcome model using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  },
+  {
+    "name": "GapNoWebhooksForRealTimeAlertDelivery",
+    "id": "gap-no-webhooks-for-real-time-alert-delivery/history",
+    "title": "No webhooks for real-time alert delivery",
+    "description": "Prepare a professional advisory report for no webhooks for real-time alert delivery using the brief and evidence you provide. Review the findings, assumptions, and action plan before applying changes.",
+    "samples": []
+  }
+]

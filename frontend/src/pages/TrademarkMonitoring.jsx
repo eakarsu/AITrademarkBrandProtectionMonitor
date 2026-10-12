@@ -25,7 +25,7 @@ export default function TrademarkMonitoring() {
     setLoading(true)
     try {
       const data = await api.get('/trademarks')
-      setItems(Array.isArray(data) ? data : data?.data || [])
+      setItems(Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [])
     } catch (e) { console.error(e) }
     setLoading(false)
   }

@@ -1,3 +1,4 @@
+import NativeAIControls from "../components/NativeAIControls.jsx";
 import React, { useState, useEffect } from 'react'
 import { api } from '../api'
 import DetailModal from '../components/DetailModal'
@@ -23,7 +24,7 @@ export default function SentimentAnalysis() {
 
   async function load() {
     setLoading(true)
-    try { const d = await api.get('/sentiment'); setItems(Array.isArray(d) ? d : d?.data || []) } catch (e) { console.error(e) }
+    try { const d = await api.get('/sentiment'); setItems(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : []) } catch (e) { console.error(e) }
     setLoading(false)
   }
 
@@ -71,7 +72,7 @@ export default function SentimentAnalysis() {
   }
 
   return (
-    <div>
+    <NativeAIControls busy={loading} context="TrademarkBrandProtectionMonitor"><div>
       <div className="page-header">
         <div className="page-header-left"><h1>{'\uD83D\uDCCA'} Sentiment Analysis</h1><p>AI-powered brand sentiment analysis</p></div>
         <button className="btn btn-primary" onClick={openCreate}>+ Add New</button>
@@ -86,18 +87,18 @@ export default function SentimentAnalysis() {
           </select>
           <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiBrand('NovaTech'); setAiSource('Twitter'); setAiPeriod('Last 30 days'); }}>Sample 1</button>
           <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiBrand('FrostByte Gaming'); setAiSource('Reddit'); setAiPeriod('Last 7 days'); }}>Sample 2</button>
-          <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiBrand('Botanica Wellness'); setAiSource(''); setAiPeriod('Last 90 days'); }}>Sample 3</button>
+          <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiBrand('Botanica Wellness'); setAiSource('Reviews'); setAiPeriod('Last 90 days'); }}>Sample 3</button>
         </div>
         <div className="ai-panel-inputs">
-          <input className="form-input" placeholder="Brand name..." value={aiBrand} onChange={e => setAiBrand(e.target.value)} />
-          <select className="form-select" value={aiSource} onChange={e => setAiSource(e.target.value)}>
+          <input data-ai-field={"aiBrand"} className="form-input" placeholder="Brand name..." value={aiBrand} onChange={e => setAiBrand(e.target.value)} />
+          <select data-ai-field={"aiSource"} className="form-select" value={aiSource} onChange={e => setAiSource(e.target.value)}>
             <option value="">All Sources</option>
             <option value="Twitter">Twitter/X</option>
             <option value="Reddit">Reddit</option>
             <option value="News">News</option>
             <option value="Reviews">Reviews</option>
           </select>
-          <select className="form-select" value={aiPeriod} onChange={e => setAiPeriod(e.target.value)}>
+          <select data-ai-field={"aiPeriod"} className="form-select" value={aiPeriod} onChange={e => setAiPeriod(e.target.value)}>
             <option value="">Select period...</option>
             <option value="Last 7 days">Last 7 days</option>
             <option value="Last 30 days">Last 30 days</option>
@@ -145,15 +146,15 @@ export default function SentimentAnalysis() {
             <div>
               <div className="form-row">
                 <div className="form-group"><label>Brand Name</label><input className="form-input" value={form.brandName || form.brand_name || ''} onChange={e => setForm({...form, brandName: e.target.value})} /></div>
-                <div className="form-group"><label>Source</label><input className="form-input" value={form.source || ''} onChange={e => setForm({...form, source: e.target.value})} /></div>
+                <div className="form-group"><label>Source</label><input data-ai-field={"source"} className="form-input" value={form.source || ''} onChange={e => setForm({...form, source: e.target.value})} /></div>
               </div>
-              <div className="form-group"><label>Period</label><input className="form-input" value={form.period || ''} onChange={e => setForm({...form, period: e.target.value})} /></div>
+              <div className="form-group"><label>Period</label><input data-ai-field={"period"} className="form-input" value={form.period || ''} onChange={e => setForm({...form, period: e.target.value})} /></div>
               <div className="form-row">
                 <div className="form-group"><label>Positive %</label><input className="form-input" type="number" value={form.positiveScore || form.positive_score || ''} onChange={e => setForm({...form, positiveScore: e.target.value})} /></div>
                 <div className="form-group"><label>Negative %</label><input className="form-input" type="number" value={form.negativeScore || form.negative_score || ''} onChange={e => setForm({...form, negativeScore: e.target.value})} /></div>
                 <div className="form-group"><label>Neutral %</label><input className="form-input" type="number" value={form.neutralScore || form.neutral_score || ''} onChange={e => setForm({...form, neutralScore: e.target.value})} /></div>
               </div>
-              <div className="form-group"><label>Summary</label><textarea className="form-textarea" value={form.summary || ''} onChange={e => setForm({...form, summary: e.target.value})} /></div>
+              <div className="form-group"><label>Summary</label><textarea data-ai-field={"summary"} className="form-textarea" value={form.summary || ''} onChange={e => setForm({...form, summary: e.target.value})} /></div>
             </div>
           ) : (
             <div>
@@ -175,6 +176,6 @@ export default function SentimentAnalysis() {
           )}
         </DetailModal>
       )}
-    </div>
+    </div></NativeAIControls>
   )
 }

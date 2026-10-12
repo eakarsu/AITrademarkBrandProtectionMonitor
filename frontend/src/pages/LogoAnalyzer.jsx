@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { clearToken } from '../api'
+import AIOutputDisplay from '../components/AIOutputDisplay'
+import NativeAIControls from '../components/NativeAIControls'
 
 const BASE = '/api'
 function getHeaders() { return { Authorization: `Bearer ${localStorage.getItem('token')}` } }
@@ -52,10 +54,8 @@ export default function LogoAnalyzer() {
     }
   }
 
-  const riskColor = { low: '#22c55e', medium: '#f59e0b', high: '#ef4444' }
-
   return (
-    <div>
+    <NativeAIControls busy={loading} context="logo analysis"><div>
       <div className="page-header">
         <h2>Logo Analyzer</h2>
         <p className="page-header-sub">AI Vision — Upload a logo for trademark risk assessment</p>
@@ -118,69 +118,10 @@ export default function LogoAnalyzer() {
               <div>AI Vision is analyzing your logo...</div>
             </div>
           )}
-          {result && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 12, padding: 24, border: '1px solid #222' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <h3 style={{ margin: 0 }}>AI Analysis Results</h3>
-                {result.risk_level && (
-                  <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, background: `${riskColor[result.risk_level]}22`, color: riskColor[result.risk_level] }}>
-                    {result.risk_level?.toUpperCase()} RISK
-                  </span>
-                )}
-              </div>
+          {result !== null && <AIOutputDisplay data={result} />}
 
-              {result.similarity_assessment && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>SIMILARITY ASSESSMENT</div>
-                  <div style={{ fontSize: 14, color: '#ddd' }}>{result.similarity_assessment}</div>
-                </div>
-              )}
-
-              {result.design_elements?.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 8 }}>DESIGN ELEMENTS</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {result.design_elements.map((el, i) => (
-                      <span key={i} style={{ background: 'rgba(99,102,241,0.15)', color: '#a5b4fc', padding: '3px 10px', borderRadius: 12, fontSize: 12 }}>{el}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {result.colors?.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>COLOR PALETTE</div>
-                  <div>{result.colors.join(', ')}</div>
-                </div>
-              )}
-
-              {result.distinguishing_features?.length > 0 && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>DISTINGUISHING FEATURES</div>
-                  <ul style={{ paddingLeft: 16, margin: 0 }}>
-                    {result.distinguishing_features.map((f, i) => (
-                      <li key={i} style={{ fontSize: 13, color: '#ccc', marginBottom: 3 }}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {result.trademark_strength && (
-                <div>
-                  <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>TRADEMARK STRENGTH</div>
-                  <span style={{ fontWeight: 700, color: result.trademark_strength === 'strong' ? '#22c55e' : result.trademark_strength === 'weak' ? '#ef4444' : '#f59e0b' }}>
-                    {result.trademark_strength?.toUpperCase()}
-                  </span>
-                </div>
-              )}
-
-              {result.response && !result.risk_level && (
-                <div style={{ whiteSpace: 'pre-wrap', fontSize: 13, color: '#ccc' }}>{result.response}</div>
-              )}
-            </div>
-          )}
         </div>
       </div>
-    </div>
+    </div></NativeAIControls>
   )
 }

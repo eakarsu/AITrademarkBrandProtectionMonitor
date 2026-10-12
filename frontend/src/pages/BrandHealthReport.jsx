@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { api } from '../api'
+import AIOutputDisplay from '../components/AIOutputDisplay'
 
 export default function BrandHealthReport() {
   const [result, setResult] = useState(null)
@@ -125,6 +126,7 @@ export default function BrandHealthReport() {
               </div>
             </div>
           )}
+          <div style={{ marginTop: 20 }}><AIOutputDisplay data={result} /></div>
         </>
       )}
     </div>

@@ -1,3 +1,4 @@
+import NativeAIControls from "../components/NativeAIControls.jsx";
 import React, { useState, useEffect } from 'react'
 import { api } from '../api'
 import DetailModal from '../components/DetailModal'
@@ -22,7 +23,7 @@ export default function CompetitorAnalysis() {
 
   async function load() {
     setLoading(true)
-    try { const d = await api.get('/competitors'); setItems(Array.isArray(d) ? d : d?.data || []) } catch (e) { console.error(e) }
+    try { const d = await api.get('/competitors'); setItems(Array.isArray(d) ? d : Array.isArray(d?.data) ? d.data : []) } catch (e) { console.error(e) }
     setLoading(false)
   }
 
@@ -55,7 +56,7 @@ export default function CompetitorAnalysis() {
   const tl = v => v === 'high' || v === 'critical' ? 'danger' : v === 'medium' ? 'warning' : 'success'
 
   return (
-    <div>
+    <NativeAIControls busy={loading} context="TrademarkBrandProtectionMonitor"><div>
       <div className="page-header">
         <div className="page-header-left"><h1>{'\uD83C\uDFC6'} Competitor Analysis</h1><p>AI-powered competitor brand monitoring</p></div>
         <button className="btn btn-primary" onClick={openCreate}>+ Add New</button>
@@ -73,8 +74,8 @@ export default function CompetitorAnalysis() {
           <button type="button" className="btn btn-outline btn-sm" onClick={() => { setAiName('HealthBridge Digital'); setAiWebsite('https://healthbridge.com'); }}>Sample 3</button>
         </div>
         <div className="ai-panel-inputs">
-          <input className="form-input" placeholder="Competitor name..." value={aiName} onChange={e => setAiName(e.target.value)} />
-          <input className="form-input" placeholder="Website (optional)..." value={aiWebsite} onChange={e => setAiWebsite(e.target.value)} />
+          <input data-ai-field={"aiName"} className="form-input" placeholder="Competitor name..." value={aiName} onChange={e => setAiName(e.target.value)} />
+          <input data-ai-field={"aiWebsite"} className="form-input" placeholder="Website (optional)..." value={aiWebsite} onChange={e => setAiWebsite(e.target.value)} />
         </div>
         <button className="btn btn-primary" onClick={handleAnalyze} disabled={aiLoading || !aiName}>
           {aiLoading ? <><span className="spinner" /> Analyzing...</> : 'Analyze Competitor'}
@@ -114,11 +115,11 @@ export default function CompetitorAnalysis() {
           {showForm ? (
             <div>
               <div className="form-row">
-                <div className="form-group"><label>Name</label><input className="form-input" value={form.name || ''} onChange={e => setForm({...form, name: e.target.value})} /></div>
-                <div className="form-group"><label>Website</label><input className="form-input" value={form.website || ''} onChange={e => setForm({...form, website: e.target.value})} /></div>
+                <div className="form-group"><label>Name</label><input data-ai-field={"name"} className="form-input" value={form.name || ''} onChange={e => setForm({...form, name: e.target.value})} /></div>
+                <div className="form-group"><label>Website</label><input data-ai-field={"website"} className="form-input" value={form.website || ''} onChange={e => setForm({...form, website: e.target.value})} /></div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>Industry</label><input className="form-input" value={form.industry || ''} onChange={e => setForm({...form, industry: e.target.value})} /></div>
+                <div className="form-group"><label>Industry</label><input data-ai-field={"industry"} className="form-input" value={form.industry || ''} onChange={e => setForm({...form, industry: e.target.value})} /></div>
                 <div className="form-group"><label>Market Position</label><input className="form-input" value={form.marketPosition || form.market_position || ''} onChange={e => setForm({...form, marketPosition: e.target.value})} /></div>
               </div>
               <div className="form-group"><label>Threat Level</label>
@@ -143,6 +144,6 @@ export default function CompetitorAnalysis() {
           )}
         </DetailModal>
       )}
-    </div>
+    </div></NativeAIControls>
   )
 }
